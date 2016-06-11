@@ -117,7 +117,7 @@ struct FloatingPoint toRight(struct FloatingPoint floating_point, char signal, c
 }
 
 int verify(char *string){
-	int i=0,flag=0;
+	int i=0,flag=0,cont0=0,cont1=0;
 	/*   flag status: 0 - s/ 1 e ,
 				   1 - s/ ,
 				   2 - a direita
@@ -136,6 +136,10 @@ int verify(char *string){
 			default : if(*(string+i)!='0') return -1;
 		}
 		i++;
+		if(flag==0 || flag==1) cont0++;//conta se vai haver estouro (expoente > 11111111)
+		if(flag==4) cont1++;//conte se vai ter estouro (expoente e mantissa tudo 0)
+		if(cont0>128) return -4;// 128+k=11111111
+		if(cont1>150) return -5;//-127+k=00000000 + 23 bits de mantissa
 	}
 	switch (flag){
 		case 0:return 2;
